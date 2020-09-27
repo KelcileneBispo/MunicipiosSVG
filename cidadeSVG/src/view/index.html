@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Municipios Banco de Dados 2</title>
+
+  <!--Importes  Materialize-->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!--NavBar-->
+  <nav>
+    <div class="nav-wrapper" style="background-color:#3caea3;">
+      <a class="brand-logo center">Municipios SVG </a>
+    </div>
+  </nav>
+
+  <!--container-->
+
+  <div class=" col s7   ">
+    <div class="row section">
+
+      <div class="input-field col s5 push-s3 ">
+        <i class="material-icons prefix">search</i>
+        <input id="cidade" type="text">
+        <label for="municipios">Escreva o nome de uma Cidade</label>
+      </div>
+
+
+      <div  class="center">
+        <button style="background-color:#3caea3;;" class="btn waves-effect " type="submit" id="botao" onclick="pegarSvgCidade();">
+          Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!--Conteudo SVG dos municipios -->
+  <div style="text-align: center;">
+
+    <svg id="svg" width="600px" height="350px" style="border:2px #3caea3 solid;">
+      <path id="path" fill="none" stroke="blue" stroke-width="0.001" />
+    </svg>
+    <p id="codSvg"></p>
+
+  </div>
+
+
+
+  <script>
+    function pegarSvgCidade() {
+
+      const cidade = document.getElementById('cidade').value;
+
+      const requestCidadeSvg = new Request(`http://localhost:3000/getSvg/${cidade}`);
+      const requestCidadeViewbox = new Request(`http://localhost:3000/getViewBox/${cidade}`);
+
+
+      fetch(requestCidadeSvg)
+        .then(response => {
+          return response.json();
+        }).then(response => {
+          document.getElementById('path').setAttribute('d', response[0].st_assvg)
+        })
+
+      fetch(requestCidadeViewbox)
+        .then(response => {
+          return response.json();
+        }).then(response => {
+          document.getElementById('svg').setAttribute('viewBox', response[0].getviewbox);
+        })
+
+    }
+
+  </script>
+
+
+  <!--Script Materialize -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+
+
+
+</body>
+
+</html>
